@@ -10,6 +10,7 @@ function App() {
 
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
+  const [users, setUsers] = useState([]);
 
   const validate = () => {
     let newErrors = {};
@@ -37,7 +38,13 @@ function App() {
     } else {
       setErrors({});
       setSuccess("Form submitted successfully!");
+      setUsers([...users, { ...form, id: Date.now() }]);
+      setForm({ name: "", email: "", phone: "" });
     }
+  };
+
+  const handleDelete = (id) => {
+    setUsers(users.filter((user) => user.id !== id));
   };
 
   const handleChange = (e) => {
@@ -83,6 +90,27 @@ function App() {
       </form>
 
       {success && <p className="success">{success}</p>}
+
+      {users.length > 0 && (
+        <div className="users-list">
+          <h3>Saved Details</h3>
+          {users.map((user) => (
+            <div key={user.id} className="user-card">
+              <div className="user-info">
+                <p><strong>Name:</strong> {user.name}</p>
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>Phone:</strong> {user.phone}</p>
+              </div>
+              <button 
+                className="delete-btn" 
+                onClick={() => handleDelete(user.id)}
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
